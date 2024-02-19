@@ -1,0 +1,5 @@
+noarch:
+  dependencies:
+  - package-install make
+  check:
+  - version.yaml

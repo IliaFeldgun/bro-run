@@ -1,0 +1,7 @@
+check:
+  run:
+    - "docker --version"
+  match:
+    - "Docker version \d*.\d*.\d*, build [0-9a-f]{0,7}"
+run:
+  - docker run --rm -v $(pwd):/src -w /src 

@@ -1,0 +1,4 @@
+- "cargo run -- --help"
+- "cargo run -- --version"
+- "cargo run"
+- "cargo run help"

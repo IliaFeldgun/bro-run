@@ -1,0 +1,4 @@
+- detect: cat /etc/lsb-release
+  package-install: 
+    - apt info ${package} || apt update
+    - apt install -y ${package}

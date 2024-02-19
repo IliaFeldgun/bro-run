@@ -1,0 +1,10 @@
+build:
+  - "cargo build"
+test:
+  - "cargo test"
+run:
+  - "run.yaml"
+tool-version:
+  - "version.yaml"
+install:
+  - "install.yaml"

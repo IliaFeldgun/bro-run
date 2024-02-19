@@ -1,0 +1,7 @@
+noarch:
+  dependencies:
+  - package-install curl
+  run:
+  - "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+  check:
+    - version.yaml

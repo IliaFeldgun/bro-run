@@ -1,0 +1,4 @@
+- "rustc --version"
+- "cargo --version"
+- "rustup --version"
+- "rustup show"
