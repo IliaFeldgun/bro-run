@@ -1,4 +1,9 @@
-use crate::bro_sandboxes::from_files::get_sandboxes;
+use std::fs;
+
+use crate::bro_maker::from_files::build;
+use crate::bro_sandbox::from_files::get_sandboxes;
+use crate::bro_detective::from_files::{detect_potential_makers, load_detectors};
+
 use clap::{arg, command, ArgMatches, Command};
 
 pub fn build_cli() -> ArgMatches {
@@ -30,10 +35,18 @@ pub fn process_cli(matches: clap::ArgMatches) {
     }
     if let Some(matches) = matches.subcommand_matches("run") {
         if matches.get_one::<String>("git_repo").is_some() {
-            println!(
-                "Running git repo {}, bro!",
-                matches.get_one::<String>("git_repo").unwrap()
-            );
+            let git_repo = String::from(matches.get_one::<String>("git_repo").unwrap());
+            println!("Running git repo {}, bro!", fs::canonicalize(git_repo.clone()).unwrap().to_str().unwrap());
+            let detectors = load_detectors();
+            let makers = detect_potential_makers(&detectors, git_repo);
+            match makers {
+                Ok(makers) => {
+                    build(makers);
+                }
+                Err(e) => {
+                    println!("No potential makers found: {}", e);
+                }
+            }
         }
     }
 }
