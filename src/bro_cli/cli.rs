@@ -33,14 +33,15 @@ pub fn process_cli(matches: clap::ArgMatches) -> Result<i32, String> {
         if let Some(git_repo) = matches.get_one::<String>("git_repo") {
             let git_repo = String::from(git_repo);
             println!("Getting git repo {}, bro!", git_repo);
-            let source_code_path = if let Some(repo_path) = get_full_path(git_repo.clone()) {
-                repo_path
+            let source_code_path: String;
+            if let Some(repo_path) = get_full_path(git_repo.clone()) {
+                source_code_path = repo_path
             } else {
                 match get_source(git_repo.clone()) {
-                    Ok(repo_path) => repo_path,
+                    Ok(repo_path) => source_code_path = repo_path,
                     Err(e) => return Err(format!("Failed to get source {}", e)),
                 }
-            };
+            }
             println!("Running git repo {}, bro!", source_code_path);
             let detectors =
                 load_detectors().map_err(|e| format!("Failed to load detectors {}", e))?;

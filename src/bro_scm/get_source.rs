@@ -16,21 +16,27 @@ pub fn get_source(source: String) -> Result<String, String> {
         None => Err(format!("Failed to detect scm of {}", source)),
     };
     match command_output {
-        Ok(output) if output.status.success() => {
-            match get_changes_since(SCM_DIR.to_string(), time) {
-                Ok(paths) => {
-                    for path in paths {
-                        if source.contains(&path.name) {
-                            return Ok(path.full_known_path);
+        Ok(output) => {
+            if output.status.success() {
+                match get_changes_since(SCM_DIR.to_string(), time) {
+                    Ok(paths) => {
+                        for path in paths {
+                            if source.contains(&path.name) {
+                                return Ok(path.full_known_path);
+                            }
                         }
+                        Err(format!("Failed to detect dir after getting {}", source))
                     }
-                    Err(format!("Failed to detect dir after getting {}", source))
+                    Err(e) => Err(e),
                 }
-                Err(e) => Err(e),
+            } else {
+                Err(format!(
+                    "Failed to run source get command {}",
+                    output.status
+                ))
             }
         }
-        Ok(output) => Err(format!("Failed to run source get command {}",output.status)),
-        Err(e) => Err(format!("Failed to run source get command {}", e))
+        Err(e) => Err(format!("Failed to run source get command {}", e)),
     }
 }
 
@@ -49,7 +55,15 @@ fn run_scm_command(source: String, scm: String) -> Result<Output, String> {
 }
 
 fn detect_scm(source: String) -> Option<String> {
-    get_scms()
-        .ok()
-        .and_then(|scms| scms.iter().find(|&scm| source.contains(scm)).cloned())
+    match get_scms() {
+        Ok(scms) => {
+            for scm in scms {
+                if source.contains(&scm) {
+                    return Some(scm);
+                }
+            }
+            None
+        }
+        Err(_) => None,
+    }
 }
