@@ -1,0 +1,6 @@
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y git curl
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup && \
+        chmod +x /tmp/rustup && \
+        /tmp/rustup -y && \
+        rm -r /tmp/rustup

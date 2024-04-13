@@ -34,7 +34,7 @@ pub fn process_cli(matches: clap::ArgMatches) -> Result<i32, String> {
             let git_repo = String::from(git_repo);
             println!("Getting git repo {}, bro!", git_repo);
             let source_code_path: String;
-            if let Some(repo_path) = get_full_path(git_repo.clone()) {
+            if let Some(repo_path) = get_full_path(Some(git_repo.clone())) {
                 source_code_path = repo_path
             } else {
                 match get_source(git_repo.clone()) {
