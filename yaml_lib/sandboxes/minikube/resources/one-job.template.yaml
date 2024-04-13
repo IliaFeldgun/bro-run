@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: {{ name }}
+  name: {{ name }}-pod
+spec:
+  containers:
+  - name: {{ name }}-container-1
+    image: "{{ image_name }}"
+    command: [ "bash", "-c"]
+    args: [ "{{ bro_cmd }}" ]
+    # workingDir: "/bro"
+    # volumeMounts:
+    # - mountPath: /bro
+    #   name: bro-scm
+    #   readOnly: False
+    resources: {}
+    imagePullPolicy: Never
+  restartPolicy: Never
+  # volumes:
+  # - name: bro-scm
+  #   hostPath:
+  #     path: {{ mount_path }}
+  #     type: Directory
