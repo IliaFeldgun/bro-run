@@ -1,7 +1,10 @@
 use crate::bro_common::file_browser::dir_contents_to_strings;
 use crate::bro_common::yaml_loader::load_yaml_as_vec;
 use regex::Regex;
+use std::collections::hash_map::Entry;
 use std::collections::HashMap;
+use std::fmt::format;
+use glob::glob;
 
 pub fn detect_potential_makers(
     detectors: &HashMap<String, Vec<String>>,
@@ -32,7 +35,7 @@ pub fn detect_potential_makers(
 pub fn load_detectors() -> Result<HashMap<String, Vec<String>>, String> {
     let mut detectors = HashMap::new();
     let detector_dir = String::from("yaml_lib/detectors/");
-    let detector_files = dir_contents_to_strings(detector_dir)
+    let detector_files = glob("yaml_lib/makers/*/detect.yaml")
         .map_err(|e| format!("Failed to list detectors {}", e))?;
     for detector_file in detector_files {
         let file_name = detector_file.name;

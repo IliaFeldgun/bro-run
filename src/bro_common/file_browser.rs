@@ -1,12 +1,11 @@
 use std::{
-    fs::{self, DirEntry},
-    io::Error,
-    time::SystemTime,
+    fs::{self, DirEntry, File}, io::Error, time::SystemTime
 };
-
+use glob::glob;
 pub struct FileInfo {
     pub name: String,
     pub full_known_path: String,
+    pub dir: String
 }
 
 fn get_file_info(dir_entry: Result<DirEntry, Error>) -> Result<FileInfo, Error> {
@@ -37,6 +36,23 @@ pub fn dir_contents_to_strings(path: String) -> Result<Vec<FileInfo>, String> {
             Ok(info) => output.push(info),
             Err(e) => {
                 return Err(format!("{}", e));
+            }
+        }
+    }
+    Ok(output)
+}
+
+pub fn glob_files(pattern: String) -> Result<Vec<FileInfo>, String> {
+    let mut output: Vec<FileInfo> = Vec::new();
+    let files = glob(&pattern).map_err(|e| format!("Failed to compile glob pattern: {}", e))?;
+    for file in files {
+        let relative_path = file.map_err(|e| format!("{}", e))?;
+        FileInfo {
+            name: relative_path.parent().
+        }
+            Ok(info) => output.push(info),
+            Err(e) => {
+                return Err(format!("{}", e))
             }
         }
     }
