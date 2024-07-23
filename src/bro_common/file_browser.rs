@@ -43,10 +43,15 @@ pub fn dir_contents_to_strings(path: String) -> Result<Vec<FileInfo>, String> {
     Ok(output)
 }
 
-pub fn get_full_path(path: String) -> Option<String> {
-    match fs::canonicalize(path) {
-        Ok(full_path) => Some(String::from(full_path.to_str()?)),
-        Err(_) => None,
+pub fn get_full_path(path: Option<String>) -> Option<String> {
+    if let Some(path) = path {
+        match fs::canonicalize(path) {
+            Ok(full_path) => Some(String::from(full_path.to_str()?)),
+            Err(_) => None,
+        }
+    }
+    else {
+        None
     }
 }
 

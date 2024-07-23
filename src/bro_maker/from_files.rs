@@ -12,7 +12,7 @@ pub fn build(makers: Vec<String>, project_path: String) -> Result<MakerResults, 
             println!("{}-ing, bro!", build_command);
             results.insert(
                 build_command.clone(),
-                run_command_sync(build_command.clone(), Some(project_path.clone())),
+                run_command_sync(build_command.clone(), Some(project_path.clone()), false),
             );
         }
     }

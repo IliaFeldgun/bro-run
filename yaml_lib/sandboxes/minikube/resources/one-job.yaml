@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: bro-sandbox
+  name: bro-sandbox-pod
+spec:
+  containers:
+  - name: bro-sandbox-container-1
+    image: "bro-sandbox:latest"
+    command: [ "bash", "-c"]
+    args: [ "git clone https://github.com/IliaFeldgun/bro-run" ]
+    # workingDir: "/bro"
+    # volumeMounts:
+    # - mountPath: /bro
+    #   name: bro-scm
+    #   readOnly: False
+    resources: {}
+    imagePullPolicy: Never
+  restartPolicy: Never
+  # volumes:
+  # - name: bro-scm
+  #   hostPath:
+  #     path: /home/ilia/work/bro-run/scm_dir
+  #     type: Directory

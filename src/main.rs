@@ -3,6 +3,7 @@ use bro_cli::cli::process_cli;
 use bro_sandbox::from_files::get_sandboxes;
 
 mod bro_cli;
+mod bro_config;
 mod bro_common;
 mod bro_detective;
 mod bro_maker;

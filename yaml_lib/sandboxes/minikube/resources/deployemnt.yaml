@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bro-sandbox
+
+---
+# Scoped service account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bro
+  namespace: bro-sandbox
+automountServiceAccountToken: true
+
+---
+# Access for the service account
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: bro-sandbox
+  name: bro-role
+rules:
+  - apiGroups:
+    - batch
+    resources:
+    - jobs
+    verbs:
+    - create
+    - get
+    - watch
+    - list
+    - delete
+
+---
+# Binding the role to the account in bro-sandbox
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: bro-role-binding
+  namespace: bro-sandbox
+subjects:
+- kind: ServiceAccount
+  name: bro
+roleRef:
+  kind: Role
+  name: bro-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox
+  namespace: bro-sandbox
+  labels:
+    app: bro-sandbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: bro
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: bro
+    spec:
+      containers:
+      - name: bro-ad-hoc-sandbox
+        image: "ubuntu:22.04"
+        ports:
+          - containerPort: 5432
+            protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}

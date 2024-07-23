@@ -1,0 +1,2 @@
+build-container-registry: docker.io
+build-container-image: bro-sandbox-build
